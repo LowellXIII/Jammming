@@ -1,0 +1,50 @@
+.Button {
+    border-radius: 12px;
+    width:25%;
+    background-color:aliceblue;
+    font-weight:bold;
+    height:30px;
+    margin-left:20px;
+    margin-right:20px;
+}
+
+.Button:hover {
+    background-color:rgb(46, 46, 46);
+    color:aliceblue;
+    
+}
+
+.sectionContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: auto;
+    padding: 0;
+    width: 90%;
+    justify-content: center;
+}
+
+.songContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+    justify-content: space-between;
+    border-color:white;
+    border-style:solid;
+    margin-top:10px;
+    margin-left:0px;
+}
+
+.inputField {
+    width:75%;
+    border-radius: 12px;
+    height: 25px;
+    font-size:20px;
+}
+
+.Remove{
+
+}
+
+

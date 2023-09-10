@@ -15,7 +15,7 @@ let repeatAuthToken;
 
 
 app.get('/callback', function(req, res) {
-    const code = "AQAwOoMxTQ6Wi8aa3ZVr8XnWXX3V58i4VXr6JZCKakkpFw9FddccX18EOC9iT6X3ee-3wsQ6R08Yax0kxnoewnTy1YDai-E62ymS_gAE90HfWbXjZ7O8Pmcjgyns9PqRUyy1cvbS5QTtmuQ3Bqycytn-g-1fW_f12nOef39xvDmYmA"
+    const code = "AQB9AsoWv5dLGHferNL2hEGiEfsyioAeS7LzlKQm0SP6Vu6cu6Tx2Av8Jtz-LGKe1MAAXaMQoZHb0inh3ZZO7pA_6ku1NJAIqJypTRhBnidebARrhnRa1tTKfGA2XrUPTCO49OwsFntgRjKiIghDgi5TxFF68J4BPyM4X5uxkKdpSNwvIY1ak1PFO5CDINBIDyCGBBoGsZUE1g"
     var state = true;
 
     if (state === null) {
@@ -45,13 +45,14 @@ app.get('/callback', function(req, res) {
           // Process the access token in 'body.access_token'
           console.log('Access token:', body.access_token);
           console.log('Refresh token:', body.refresh_token);
+          console.log(body.scope);
           authToken = body.access_token;
           repeatAuthToken = body.refresh_token;
           res.redirect('/#' +
             queryString.stringify({
               access_token: body.access_token,
-              refresh_token: body.refresh_token
-            }));
+              refresh_token: body.refresh_token,
+            })); 
         } else {
           res.redirect('/#' +
             queryString.stringify({
