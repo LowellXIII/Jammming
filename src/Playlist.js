@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import './EditSong.css';
+import RenameForm from './RenameForm.js'
 
-let checkInput = 0;
 
 const Playlist = (props) => {
-    const [idInput, setIdInput] = useState("");
+    const [idInput, setIdInput] = useState("");                 //Spotify Playlist ID
     const [playlistResult, setPlaylistResult] = useState([]);
-
-    
+    const [playlistName, setPlaylistName] = useState("");
+    const [showForm, setShowForm] = useState(false);
+    const [showComponent, setShowComponent] = useState(false);
     const apiKey = "https://api.spotify.com/v1/playlists/";
     const apiUrl = `${apiKey}${idInput}`;
+
+    useEffect(() => {
+        //console.log(playlistResult);
+        //console.log(playlistResult[0], {track:props.addSong})
+        if(props.addSong.name !== 0){
+            setPlaylistResult((prev) => [{track: props.addSong}, ...prev])
+        }
+    }, [props.addSong]) 
 
     const headers = new Headers({
         "Authorization" : `Bearer ${props.message}`,
@@ -23,6 +32,7 @@ const Playlist = (props) => {
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
+        setShowComponent(true);
         fetch(apiUrl,{
             method: "GET",
             headers: headers
@@ -35,19 +45,19 @@ const Playlist = (props) => {
             let playlist = [];
             playlist = data.tracks.items;
             setPlaylistResult(playlist);
+            setPlaylistName(data.name);
             console.log(playlist);
-            checkInput = 1;
         }).catch(error => {
             console.error('Error fetching data: ', error);
         })
     };
 
-    useEffect(() => {
-        if(props.addSong){
-            console.log(props.addSong);
-            playlistResult.push(props.addSong);
-        }
-    }, [props.addSong, playlistResult])
+    const toggleForm = (e) => {
+        e.preventDefault();
+        setShowForm(!showForm);
+    }
+
+
 
 
     const handleButtonClick = (e) => {
@@ -75,7 +85,9 @@ const Playlist = (props) => {
     }
 
     return(
-        <div style={{"width":"50%"}}>
+        <div style={{
+            "width":"50%",
+            }}>
             <form onSubmit={handleOnSubmit} >
                 <label htmlFor="playlist" style={{padding:10}}>Search your Playlist by ID</label>
                 <input
@@ -85,13 +97,19 @@ const Playlist = (props) => {
                     onChange={handleOnChange} 
                     type="text" 
                     className="inputField" />
-                <p style={{
-                    "opacity":checkInput,
-                    "textDecoration":"underline"
-                    }}>
-                        Your Playlist
-                </p>
-            </form>    
+            </form>
+            {showComponent && (<playlistName style={{
+                    "display":"flex",
+                    "flexDirection":"column",
+                    "alignItems":"center"
+
+                }}>
+                <p id="PlaylistName">{playlistName}</p>
+                <button className="Button" onClick={toggleForm}>Rename</button>
+                {showForm && (
+                    <RenameForm apiUrl={apiUrl} headers={headers} current={playlistName}/>
+                )}
+            </playlistName>)}    
                 <ul>
                     {playlistResult.map(tracks => (
                         <div className="sectionContainer">
@@ -100,8 +118,7 @@ const Playlist = (props) => {
                                 <img src={tracks.track.album.images[0].url} width="100" height="100" alt="" />
                             </li>
                             <button className="Button" onClick={handleButtonClick} value={tracks.track.uri}>Remove</button>
-                        </div>
-                        
+                        </div> 
                     ))}
                 </ul>
             

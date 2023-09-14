@@ -10,7 +10,7 @@ function App() {
 
   const [tokenNow, setTokenNow] = useState("")
   const [sharedSpotID, setSharedSpotID] = useState("");
-  const [addSong, setAddSong] = useState("")
+  const [addSong, setAddSong] = useState({name:0});
 
   
   useEffect(() => {
@@ -45,7 +45,6 @@ function App() {
           <Playlist message={tokenNow} setSharedSpotID={setSharedSpotID} addSong={addSong} />
           <SearchBar message={tokenNow} sharedSpotID={sharedSpotID} setAddSong={setAddSong} />
         </container>
-        <p>{addSong}</p>
       </header>
     </div>
   );

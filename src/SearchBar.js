@@ -15,24 +15,24 @@ const SearchBar = (props) => {
     "Content-Type" : "application/json"
   })
 
+  //Add Song to Playlist
   const handleButtonClick = (e) => {
     e.preventDefault();
+    
     const trackValue = e.target.value;
-    const addingSong = e.target.message;
     const bodyRequest = {uris: [trackValue], position: 0};
-
-    console.log(trackValue);
-    console.log(addApiUri);
-    console.log(JSON.stringify(bodyRequest));
-    console.log(addingSong);
-    //props.setAddSong(e.target.message);
-
+    const dataValueString = e.target.getAttribute('data-value');
+    const customObject = JSON.parse(dataValueString);
+    props.setAddSong(customObject);
+    console.log(customObject);
+    
     fetch(addApiUri, {
       method: 'POST',
       headers: headers,
       body: JSON.stringify(bodyRequest),
     }).then((response) => {
       if(!response.ok){
+        alert("Please search your playlist");
         throw new Error(`Network response was not ok: ${response.status}`);
       } 
       return response.json();
@@ -43,6 +43,20 @@ const SearchBar = (props) => {
     })
   }
   
+  const handlePlayClick = (e) => {
+    const audioIndex = e.target.value;
+    console.log(audioIndex);
+    const audioElement = document.getElementById(audioIndex);
+    audioElement.play();
+  }
+
+  const handleStopClick = (e) => {
+    const audioIndex = e.target.value;
+    const audioElement = document.getElementById(audioIndex);
+    audioElement.pause();
+    audioElement.currentTime = 0;
+  }
+
   const handleSearch = (e) => {
       e.preventDefault();
       fetch(apiUrl, {
@@ -87,13 +101,21 @@ const SearchBar = (props) => {
       />     
       </form>
       <ul>
-        {searchResults.map(track => (
+        {searchResults.map((track, i) => (
           <div className="sectionContainer">
             <li key={track.id} className="songContainer">
-              {track.name}
-              <img src={track.album.images[0].url} width="100" height="100" alt="" />
+              <p className="songName">{track.name}</p>
+              <img src={track.album.images[0].url} alt="" className="images" />
+              <audio id={"audio" + i} src={track.preview_url}></audio>
+              <div style={{
+                "display":"flex",
+                "flexDirection": "column",
+              }}>
+                <button id={`audio${i}`} className="audioButton" value={"audio" + i} onClick={handlePlayClick} >Preview</button>
+                <button className="audioButton" value={"audio" + i} onClick={handleStopClick} >Stop</button>
+              </div>
             </li>
-            <button className="Button" message={track} value={track.uri} onClick={handleButtonClick}>Add</button>      
+            <button id={`button${i}`} className="Button" data-value={JSON.stringify(track)} value={track.uri} onClick={handleButtonClick}>Add</button>      
           </div>
         ))}
       </ul>
